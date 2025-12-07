@@ -28,7 +28,7 @@
 
 ## 🛠 Technical Stack
 
-* **Framework:** .NET 8 (Desktop)
+* **Framework:** .NET 10 (Desktop)
 * **UI Framework:** WPF (Windows Presentation Foundation)
 * **Architecture:** MVVM (Model-View-ViewModel) using `CommunityToolkit.Mvvm`
 * **Visualization:** LiveCharts
@@ -50,8 +50,8 @@ The project follows strict **Separation of Concerns**:
 ## 💻 Getting Started
 
 ### Prerequisites
-* Visual Studio 2022
-* .NET 8 SDK
+* Visual Studio 2026
+* .NET 10 SDK
 
 ### Installation
 1.  Clone the repository:
