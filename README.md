@@ -2,7 +2,7 @@
 
 <img width="1094" height="649" alt="netSentry" src="https://github.com/user-attachments/assets/609d3446-a5d3-4ad8-bd37-7f1fcd56aa10" />
 
-**NetSentry** is a high-performance system monitoring dashboard and threat hunting tool designed with a Cyberpunk aesthetic. Built with **.NET 8**, **WPF**, and **MVVM** architecture, it demonstrates advanced UI styling, real-time data visualization, and system diagnostics integration.
+**NetSentry** is a high-performance system monitoring dashboard and threat hunting tool designed with a Cyberpunk aesthetic. Built with **.NET 10**, **WPF**, and **MVVM** architecture, it demonstrates advanced UI styling, real-time data visualization, and system diagnostics integration.
 
 ---
 
