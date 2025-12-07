@@ -131,7 +131,7 @@
 
                     <Border Grid.Row="0" Style="{StaticResource TechPanelStyle}" Margin="0,0,0,15">
                         <Grid>
-                            <TextBlock Text="CPU_MONITORING_REALTIME" Foreground="{StaticResource TextSecondaryBrush}" FontSize="10" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="15,10,0,0" Opacity="0.5"/>
+                            <TextBlock Text="{Binding ChartTitle}" Foreground="{StaticResource TextSecondaryBrush}" FontSize="10" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="15,10,0,0" Opacity="0.5"/>
 
                             <Button Content="[ SWITCH VIEW ]" 
                                     Command="{Binding ToggleChartModeCommand}"
@@ -172,25 +172,48 @@
                             </lvc:CartesianChart>
 
                             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" IsHitTestVisible="False">
-                                <TextBlock Text="{Binding DisplayUsage}" 
-                                           Foreground="{Binding StatusColor}" 
-                                           FontSize="56" FontWeight="Light" HorizontalAlignment="Center">
-                                    <TextBlock.Effect>
-                                        <DropShadowEffect Color="Black" BlurRadius="2" ShadowDepth="2" Opacity="0.5"/>
-                                    </TextBlock.Effect>
-                                </TextBlock>
+
+                                <Viewbox MaxWidth="400" Height="60">
+                                    <StackPanel Orientation="Horizontal">
+                                        <StackPanel.Effect>
+                                            <DropShadowEffect Color="Black" BlurRadius="2" ShadowDepth="2" Opacity="0.5"/>
+                                        </StackPanel.Effect>
+
+                                        <TextBlock Text="{Binding PrimaryDisplayValue}" 
+                                                   Foreground="{Binding StatusColor}" 
+                                                   FontWeight="Light"/>
+
+                                        <StackPanel Orientation="Horizontal" Visibility="{Binding DualModeVisibility}">
+
+                                            <TextBlock Text=" | " 
+                                                       Foreground="{StaticResource TextSecondaryBrush}" 
+                                                       Opacity="0.5" 
+                                                       FontWeight="Light"/>
+
+                                            <TextBlock Text="{Binding SecondaryDisplayValue}" 
+                                                       Foreground="#d946ef" 
+                                                       FontWeight="Light"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Viewbox>
 
                                 <TextBlock Text="{Binding MainValueLabel}" 
                                            Foreground="{StaticResource TextSecondaryBrush}" 
-                                           Opacity="0.6" HorizontalAlignment="Center" FontSize="12"/>
+                                           Opacity="0.6" HorizontalAlignment="Center" FontSize="12" Margin="0,5,0,0"/>
                             </StackPanel>
 
-                            <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="15,0,0,10" Orientation="Horizontal" Opacity="0.7">
-                                <Rectangle Width="8" Height="8" Fill="{Binding StatusColor}" Margin="0,0,5,0" RadiusX="2" RadiusY="2"/>
-                                <TextBlock Text="CPU" Foreground="{StaticResource TextSecondaryBrush}" FontSize="10" Margin="0,0,15,0" FontWeight="Bold"/>
+                            <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="15,0,0,10" Orientation="Horizontal" Opacity="0.8">
 
-                                <Rectangle Width="8" Height="8" Fill="#d946ef" Margin="0,0,5,0" RadiusX="2" RadiusY="2"/>
-                                <TextBlock Text="RAM" Foreground="{StaticResource TextSecondaryBrush}" FontSize="10" FontWeight="Bold"/>
+                                <StackPanel Orientation="Horizontal" Visibility="{Binding CpuLegendVisibility}" Margin="0,0,15,0">
+                                    <Rectangle Width="8" Height="8" Fill="{Binding StatusColor}" Margin="0,0,5,0" RadiusX="2" RadiusY="2"/>
+                                    <TextBlock Text="CPU" Foreground="{StaticResource TextSecondaryBrush}" FontSize="10" FontWeight="Bold"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" Visibility="{Binding RamLegendVisibility}">
+                                    <Rectangle Width="8" Height="8" Fill="#d946ef" Margin="0,0,5,0" RadiusX="2" RadiusY="2"/>
+                                    <TextBlock Text="RAM" Foreground="{StaticResource TextSecondaryBrush}" FontSize="10" FontWeight="Bold"/>
+                                </StackPanel>
+
                             </StackPanel>
                         </Grid>
                     </Border>

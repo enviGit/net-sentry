@@ -51,6 +51,12 @@ namespace NetSentry_Dashboard.ViewModels
         [ObservableProperty] private string _toastMessage = "";
         [ObservableProperty] private Visibility _toastVisibility = Visibility.Collapsed;
 
+        [ObservableProperty] private string _primaryDisplayValue;
+        [ObservableProperty] private string _secondaryDisplayValue;
+        [ObservableProperty] private Visibility _dualModeVisibility = Visibility.Collapsed;
+        [ObservableProperty] private Visibility _cpuLegendVisibility = Visibility.Visible;
+        [ObservableProperty] private Visibility _ramLegendVisibility = Visibility.Collapsed;
+
         public SeriesCollection Series { get; set; }
 
         public MainViewModel()
@@ -139,41 +145,60 @@ namespace NetSentry_Dashboard.ViewModels
             switch (_viewMode)
             {
                 case 0: // CPU Mode
-                    DisplayUsage = $"{CpuUsage:0.0}%";
+                    PrimaryDisplayValue = $"{CpuUsage:0.0}%";
+                    DualModeVisibility = Visibility.Collapsed;
+                    CpuLegendVisibility = Visibility.Visible;
+                    RamLegendVisibility = Visibility.Collapsed;
                     if (MainValueLabel != "PROCESSOR LOAD") MainValueLabel = "PROCESSOR LOAD";
                     break;
 
                 case 1: // RAM Mode
-                    DisplayUsage = $"{RamUsage:0.0}%";
+                    PrimaryDisplayValue = $"{RamUsage:0.0}%";
+                    DualModeVisibility = Visibility.Collapsed;
+                    CpuLegendVisibility = Visibility.Collapsed;
+                    RamLegendVisibility = Visibility.Visible;
                     if (MainValueLabel != "SYSTEM MEMORY LOAD") MainValueLabel = "SYSTEM MEMORY LOAD";
                     break;
 
                 case 2: // Dual Mode
-                    DisplayUsage = $"{CpuUsage:0.0}%";
-                    MainValueLabel = $"CPU ({_currentColorName}) / RAM (PURPLE)";
+                    PrimaryDisplayValue = $"{CpuUsage:0}%";
+                    SecondaryDisplayValue = $"{RamUsage:0}%";
+                    DualModeVisibility = Visibility.Visible;
+                    CpuLegendVisibility = Visibility.Visible;
+                    RamLegendVisibility = Visibility.Visible;
+                    MainValueLabel = $"CPU ({_currentColorName})  |  RAM (PURPLE)";
                     break;
             }
         }
 
+        // Theme Engine
         private void UpdateThemeColor(double usage)
         {
             string hex;
             string name;
 
-            if (usage < 40)
+            if (_viewMode == 1)
             {
-                hex = "#00f2ff";
-                name = "CYAN";
-            }
-            else if (usage < 80)
-            {
-                hex = "#ffea00";
-                name = "YELLOW";
+                hex = "#d946ef";
+                name = "PURPLE";
             }
             else
             {
-                hex = "#ff0055";
-                name = "RED";
+                if (usage < 40)
+                {
+                    hex = "#00f2ff";
+                    name = "CYAN";
+                }
+                else if (usage < 80)
+                {
+                    hex = "#ffea00";
+                    name = "YELLOW";
+                }
+                else
+                {
+                    hex = "#ff0055";
+                    name = "RED";
+                }
             }
 
             _currentColorName = name;
