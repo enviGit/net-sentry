@@ -98,17 +98,8 @@
 
                     <Border Grid.Row="0" Style="{StaticResource TechPanelStyle}" Margin="0,0,0,15">
                         <Grid>
-                            <TextBlock Text="CPU_MONITORING_REALTIME" 
-                                       Foreground="{StaticResource TextSecondaryBrush}" 
-                                       FontSize="10" 
-                                       VerticalAlignment="Top" HorizontalAlignment="Left" 
-                                       Margin="15,10,0,0" Opacity="0.5"/>
-
-                            <lvc:CartesianChart Series="{Binding Series}" 
-                                                Hoverable="False" 
-                                                DataTooltip="{x:Null}"
-                                                Margin="10,30,10,10"
-                                                AnimationsSpeed="0:0:0.15">
+                            <TextBlock Text="CPU_MONITORING_REALTIME" Foreground="{StaticResource TextSecondaryBrush}" FontSize="10" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="15,10,0,0" Opacity="0.5"/>
+                            <lvc:CartesianChart Series="{Binding Series}" Hoverable="False" DataTooltip="{x:Null}" Margin="10,30,10,10" AnimationsSpeed="0:0:0.15">
                                 <lvc:CartesianChart.AxisX>
                                     <lvc:Axis ShowLabels="False" IsEnabled="False"/>
                                 </lvc:CartesianChart.AxisX>
@@ -116,45 +107,111 @@
                                     <lvc:Axis ShowLabels="False" IsEnabled="False" MinValue="0" MaxValue="100"/>
                                 </lvc:CartesianChart.AxisY>
                             </lvc:CartesianChart>
-
                             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" IsHitTestVisible="False">
-                                <TextBlock Text="{Binding CpuUsage, StringFormat={}{0:0.0}%}" 
-                                           Foreground="{Binding StatusColor}" 
-                                           FontSize="56" FontWeight="Light" HorizontalAlignment="Center">
+                                <TextBlock Text="{Binding CpuUsage, StringFormat={}{0:0.0}%}" Foreground="{Binding StatusColor}" FontSize="56" FontWeight="Light" HorizontalAlignment="Center">
                                     <TextBlock.Effect>
                                         <DropShadowEffect Color="Black" BlurRadius="2" ShadowDepth="2" Opacity="0.5"/>
                                     </TextBlock.Effect>
                                 </TextBlock>
-                                <TextBlock Text="PROCESSOR LOAD" 
-                                           Foreground="{StaticResource TextSecondaryBrush}" 
-                                           Opacity="0.6" HorizontalAlignment="Center" FontSize="12"/>
+                                <TextBlock Text="PROCESSOR LOAD" Foreground="{StaticResource TextSecondaryBrush}" Opacity="0.6" HorizontalAlignment="Center" FontSize="12"/>
                             </StackPanel>
                         </Grid>
                     </Border>
 
                     <Border Grid.Row="1" Style="{StaticResource TechPanelStyle}">
                         <Grid>
-                            <TextBlock Text="SYSTEM_EVENT_LOGS" 
-                                       Foreground="{StaticResource TextSecondaryBrush}" 
-                                       FontSize="10" 
-                                       VerticalAlignment="Top" HorizontalAlignment="Left" 
-                                       Margin="15,10,0,0" Opacity="0.5"/>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
 
-                            <ScrollViewer VerticalScrollBarVisibility="Hidden" Margin="10,25,10,10">
-                                <ItemsControl ItemsSource="{Binding Logs}">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <StackPanel Orientation="Horizontal" Margin="0,2,0,0">
-                                                <TextBlock Text=">" Foreground="#334155" Margin="0,0,5,0"/>
-                                                <TextBlock Text="{Binding}" 
-                                                           Foreground="{StaticResource TextPrimaryBrush}" 
-                                                           FontFamily="Consolas" FontSize="12"/>
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </ScrollViewer>
+                            <Grid Grid.Row="0" Margin="10,5">
+                                <TextBlock Text="SYSTEM_EVENT_LOGS" 
+                                           Foreground="{StaticResource TextSecondaryBrush}" 
+                                           FontSize="10" 
+                                           VerticalAlignment="Center" Opacity="0.5"/>
+
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                    <StackPanel.Resources>
+                                        <Style TargetType="Button">
+                                            <Setter Property="Background" Value="Transparent"/>
+                                            <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
+                                            <Setter Property="BorderThickness" Value="0"/>
+                                            <Setter Property="FontSize" Value="10"/>
+                                            <Setter Property="Margin" Value="5,0,0,0"/>
+                                            <Setter Property="Cursor" Value="Hand"/>
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="Button">
+                                                        <Border Background="{TemplateBinding Background}" CornerRadius="2" Padding="5,2">
+                                                            <ContentPresenter/>
+                                                        </Border>
+                                                        <ControlTemplate.Triggers>
+                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                <Setter Property="Background" Value="#334155"/>
+                                                                <Setter Property="Foreground" Value="White"/>
+                                                            </Trigger>
+                                                        </ControlTemplate.Triggers>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </StackPanel.Resources>
+
+                                    <Button Content="[ COPY ]" Command="{Binding CopyLogsCommand}"/>
+                                    <Button Content="[ EXPORT .TXT ]" Command="{Binding ExportLogsCommand}"/>
+                                </StackPanel>
+                            </Grid>
+
+                            <TextBox Grid.Row="1" 
+                                     Text="{Binding LogsText}"
+                                     IsReadOnly="True"
+                                     TextWrapping="Wrap"
+                                     VerticalScrollBarVisibility="Auto"
+                                     Background="Transparent"
+                                     Foreground="{StaticResource TextPrimaryBrush}"
+                                     BorderThickness="0"
+                                     FontFamily="{StaticResource TechFont}"
+                                     FontSize="12"
+                                     Margin="10,0,5,10" 
+                                     SelectionBrush="{Binding StatusColor}"
+                                     SelectionOpacity="0.4">
+
+                                <TextBox.Resources>
+                                    <Style TargetType="{x:Type ScrollBar}" BasedOn="{StaticResource TechScrollBarStyle}"/>
+
+                                    <Style TargetType="{x:Type TextBox}">
+                                        <EventSetter Event="TextChanged" Handler="LogBox_TextChanged"/>
+                                    </Style>
+                                </TextBox.Resources>
+
+                            </TextBox>
                         </Grid>
+                    </Border>
+
+                    <Border Grid.RowSpan="2" 
+                            VerticalAlignment="Bottom" HorizontalAlignment="Center" 
+                            Margin="0,0,0,50"
+                            Background="#CC000000" 
+                            BorderBrush="{Binding StatusColor}" 
+                            BorderThickness="1" 
+                            CornerRadius="20"
+                            Padding="20,10"
+                            Visibility="{Binding ToastVisibility}">
+                        <TextBlock Text="{Binding ToastMessage}" 
+                                   Foreground="{Binding StatusColor}" 
+                                   FontWeight="Bold" 
+                                   FontSize="12"/>
+
+                        <Border.Triggers>
+                            <EventTrigger RoutedEvent="Loaded">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:0.2"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </Border.Triggers>
                     </Border>
                 </Grid>
             </Grid>

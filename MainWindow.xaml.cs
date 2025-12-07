@@ -25,5 +25,13 @@ namespace NetSentry_Dashboard
         {
             Application.Current.Shutdown();
         }
+
+        private void LogBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            if (sender is System.Windows.Controls.TextBox textBox)
+            {
+                textBox.ScrollToEnd();
+            }
+        }
     }
 }

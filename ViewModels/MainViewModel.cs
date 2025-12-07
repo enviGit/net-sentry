@@ -3,7 +3,9 @@ using CommunityToolkit.Mvvm.Input;
 using LiveCharts;
 using LiveCharts.Wpf;
 using NetSentry_Dashboard.Services;
-using System.Collections.ObjectModel;
+using System.IO;
+using System.Text;
+using System.Windows;
 using System.Windows.Media;
 using System.Windows.Threading;
 
@@ -20,7 +22,15 @@ namespace NetSentry_Dashboard.ViewModels
         [ObservableProperty] private double _cpuUsage;
         [ObservableProperty] private Brush _statusColor;
 
-        public ObservableCollection<string> Logs { get; } = new ObservableCollection<string>();
+        private readonly StringBuilder _logBuilder = new StringBuilder();
+
+        [ObservableProperty]
+        private string _logsText = "";
+
+        // --- TOAST NOTIFICATION ---
+        [ObservableProperty] private string _toastMessage = "";
+        [ObservableProperty] private Visibility _toastVisibility = Visibility.Collapsed;
+
         public SeriesCollection Series { get; set; }
         private readonly ChartValues<double> _chartValues;
         private readonly LineSeries _lineSeries;
@@ -90,13 +100,52 @@ namespace NetSentry_Dashboard.ViewModels
 
         private void AddLog(string message)
         {
-            System.Windows.Application.Current.Dispatcher.Invoke(() =>
+            Application.Current.Dispatcher.Invoke(() =>
             {
-                Logs.Add($"[{DateTime.Now:HH:mm:ss}] {message}");
-                if (Logs.Count > 20) Logs.RemoveAt(0);
+                string time = DateTime.Now.ToString("HH:mm:ss");
+                string line = $"[{time}] {message}";
+
+                _logBuilder.AppendLine(line);
+
+                if (_logBuilder.Length > 10000)
+                    _logBuilder.Remove(0, _logBuilder.Length - 8000);
+
+                LogsText = _logBuilder.ToString();
             });
         }
 
+        private async void ShowToast(string message)
+        {
+            ToastMessage = message;
+            ToastVisibility = Visibility.Visible;
+            await Task.Delay(2000);
+            ToastVisibility = Visibility.Collapsed;
+        }
+
+        [RelayCommand]
+        private void CopyLogs()
+        {
+            if (string.IsNullOrEmpty(LogsText)) return;
+            Clipboard.SetText(LogsText);
+            ShowToast("LOGS COPIED TO CLIPBOARD");
+        }
+
+        [RelayCommand]
+        private void ExportLogs()
+        {
+            if (string.IsNullOrEmpty(LogsText)) return;
+            try
+            {
+                string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "netsentry_logs.txt");
+                File.WriteAllText(path, LogsText);
+                ShowToast($"SAVED TO DESKTOP");
+            }
+            catch (Exception ex)
+            {
+                ShowToast("ERROR SAVING FILE");
+                AddLog($"[ERROR] SAVE FAILED: {ex.Message}");
+            }
+        }
 
         [RelayCommand]
         private async Task ScanNetwork()
