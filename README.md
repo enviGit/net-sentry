@@ -4,6 +4,13 @@
 
 **NetSentry** is a high-performance system monitoring dashboard and threat hunting tool designed with a Cyberpunk aesthetic. Built with **.NET 10**, **WPF**, and **MVVM** architecture, it demonstrates advanced UI styling, real-time data visualization, and system diagnostics integration.
 
+## 📥 Download & Demo
+
+Want to see the dashboard in action without compiling?
+You can download the latest stable executable from the releases page.
+
+[**👉 Download Latest Release (v1.0.0)**](https://github.com/enviGit/net-sentry/releases/latest)
+
 ---
 
 ## 🚀 Key Features
