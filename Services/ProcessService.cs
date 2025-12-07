@@ -34,6 +34,8 @@ namespace NetSentry_Dashboard.Services
             "VBCSCompiler",
             "MSBuild",
             "StandardCollector.Service",
+            "WpfSurface",
+            "XDesProc",
 
             // --- WEB BROWSERS (Multiprocess Architecture) ---
             "msedge",

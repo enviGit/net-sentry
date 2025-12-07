@@ -6,18 +6,22 @@ namespace NetSentry_Dashboard.Services
     public class SystemMonitorService
     {
         private PerformanceCounter? _cpuCounter;
+        private PerformanceCounter? _ramCounter;
 
-        public bool InitializeCpuCounter()
+        public bool InitializeCounters()
         {
             try
             {
                 _cpuCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
                 _cpuCounter.NextValue();
+
+                _ramCounter = new PerformanceCounter("Memory", "% Committed Bytes In Use");
+                _ramCounter.NextValue();
+
                 return true;
             }
             catch
             {
-                _cpuCounter = null;
                 return false;
             }
         }
@@ -25,14 +29,30 @@ namespace NetSentry_Dashboard.Services
         public double GetCpuUsage()
         {
             if (_cpuCounter == null) return 0;
+            try { return _cpuCounter.NextValue(); } catch { return 0; }
+        }
+
+        public double GetRamUsage()
+        {
+            if (_ramCounter == null) return 0;
+            try { return _ramCounter.NextValue(); } catch { return 0; }
+        }
+
+        public int GetTotalThreadCount()
+        {
             try
             {
-                return _cpuCounter.NextValue();
+                return Process.GetProcesses().Sum(p => p.Threads.Count);
             }
             catch
             {
                 return 0;
             }
+        }
+
+        public TimeSpan GetUptime()
+        {
+            return TimeSpan.FromMilliseconds(Environment.TickCount64);
         }
 
         public void TryRepairCounters(Action<string> logger)

@@ -14,7 +14,7 @@
             BorderThickness="1" CornerRadius="8" ClipToBounds="True">
 
         <Border.BorderBrush>
-            <SolidColorBrush Color="{Binding StatusColor.Color, FallbackValue=#4ade80}" Opacity="0.5"/>
+            <SolidColorBrush Color="{Binding StatusColor.Color}" Opacity="0.5"/>
         </Border.BorderBrush>
 
         <Grid>
@@ -85,8 +85,41 @@
                     <TextBlock Text="METRICS" Foreground="{StaticResource TextSecondaryBrush}" FontSize="12" Margin="0,0,0,10" Opacity="0.5"/>
 
                     <StackPanel Margin="5">
-                        <TextBlock Text="THREADS: 24" Foreground="{StaticResource TextSecondaryBrush}" FontSize="12"/>
-                        <TextBlock Text="UPTIME: 04:21:00" Foreground="{StaticResource TextSecondaryBrush}" FontSize="12" Margin="0,5,0,0"/>
+                        <TextBlock Text="MEMORY LOAD:" Foreground="{StaticResource TextSecondaryBrush}" FontSize="10" Opacity="0.5"/>
+                        <Grid Margin="0,2,0,10">
+                            <Border Height="4" Background="#334155" CornerRadius="2" VerticalAlignment="Center"/>
+                            <ProgressBar Value="{Binding RamUsage}" Maximum="100" Height="4" BorderThickness="0" Background="Transparent" Foreground="{Binding StatusColor}">
+                                <ProgressBar.Style>
+                                    <Style TargetType="ProgressBar">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="ProgressBar">
+                                                    <Grid>
+                                                        <Border Background="Transparent"/>
+                                                        <Border x:Name="PART_Indicator" HorizontalAlignment="Left" Background="{TemplateBinding Foreground}" CornerRadius="2"/>
+                                                    </Grid>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </ProgressBar.Style>
+                            </ProgressBar>
+                            <TextBlock Text="{Binding RamUsage, StringFormat={}{0:0}%}" 
+                                       Foreground="{Binding StatusColor}" 
+                                       FontSize="10" 
+                                       HorizontalAlignment="Right" 
+                                       Margin="0,-15,0,0"/>
+                        </Grid>
+
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                            <TextBlock Text="THREADS:" Foreground="{StaticResource TextSecondaryBrush}" FontSize="12"/>
+                            <TextBlock Text="{Binding ThreadCount}" Foreground="{StaticResource TextPrimaryBrush}" FontSize="12" Margin="5,0,0,0" FontWeight="Bold"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="UPTIME:" Foreground="{StaticResource TextSecondaryBrush}" FontSize="12"/>
+                            <TextBlock Text="{Binding Uptime}" Foreground="{StaticResource TextPrimaryBrush}" FontSize="12" Margin="10,0,0,0" FontFamily="Consolas"/>
+                        </StackPanel>
                     </StackPanel>
                 </StackPanel>
 
@@ -99,7 +132,37 @@
                     <Border Grid.Row="0" Style="{StaticResource TechPanelStyle}" Margin="0,0,0,15">
                         <Grid>
                             <TextBlock Text="CPU_MONITORING_REALTIME" Foreground="{StaticResource TextSecondaryBrush}" FontSize="10" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="15,10,0,0" Opacity="0.5"/>
-                            <lvc:CartesianChart Series="{Binding Series}" Hoverable="False" DataTooltip="{x:Null}" Margin="10,30,10,10" AnimationsSpeed="0:0:0.15">
+
+                            <Button Content="[ SWITCH VIEW ]" 
+                                    Command="{Binding ToggleChartModeCommand}"
+                                    VerticalAlignment="Top" HorizontalAlignment="Right"
+                                    Margin="0,8,10,0"
+                                    Background="Transparent"
+                                    Foreground="{Binding StatusColor}"
+                                    BorderThickness="0"
+                                    FontSize="10"
+                                    Cursor="Hand"
+                                    Opacity="0.8">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="Transparent">
+                                            <ContentPresenter/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Opacity" Value="1.0"/>
+                                                <Setter Property="FontWeight" Value="Bold"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+
+                            <lvc:CartesianChart Series="{Binding Series}" 
+                                                Hoverable="False" 
+                                                DataTooltip="{x:Null}" 
+                                                Margin="10,30,10,40" 
+                                                AnimationsSpeed="0:0:0.15">
                                 <lvc:CartesianChart.AxisX>
                                     <lvc:Axis ShowLabels="False" IsEnabled="False"/>
                                 </lvc:CartesianChart.AxisX>
@@ -107,13 +170,27 @@
                                     <lvc:Axis ShowLabels="False" IsEnabled="False" MinValue="0" MaxValue="100"/>
                                 </lvc:CartesianChart.AxisY>
                             </lvc:CartesianChart>
+
                             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" IsHitTestVisible="False">
-                                <TextBlock Text="{Binding CpuUsage, StringFormat={}{0:0.0}%}" Foreground="{Binding StatusColor}" FontSize="56" FontWeight="Light" HorizontalAlignment="Center">
+                                <TextBlock Text="{Binding DisplayUsage}" 
+                                           Foreground="{Binding StatusColor}" 
+                                           FontSize="56" FontWeight="Light" HorizontalAlignment="Center">
                                     <TextBlock.Effect>
                                         <DropShadowEffect Color="Black" BlurRadius="2" ShadowDepth="2" Opacity="0.5"/>
                                     </TextBlock.Effect>
                                 </TextBlock>
-                                <TextBlock Text="PROCESSOR LOAD" Foreground="{StaticResource TextSecondaryBrush}" Opacity="0.6" HorizontalAlignment="Center" FontSize="12"/>
+
+                                <TextBlock Text="{Binding MainValueLabel}" 
+                                           Foreground="{StaticResource TextSecondaryBrush}" 
+                                           Opacity="0.6" HorizontalAlignment="Center" FontSize="12"/>
+                            </StackPanel>
+
+                            <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="15,0,0,10" Orientation="Horizontal" Opacity="0.7">
+                                <Rectangle Width="8" Height="8" Fill="{Binding StatusColor}" Margin="0,0,5,0" RadiusX="2" RadiusY="2"/>
+                                <TextBlock Text="CPU" Foreground="{StaticResource TextSecondaryBrush}" FontSize="10" Margin="0,0,15,0" FontWeight="Bold"/>
+
+                                <Rectangle Width="8" Height="8" Fill="#d946ef" Margin="0,0,5,0" RadiusX="2" RadiusY="2"/>
+                                <TextBlock Text="RAM" Foreground="{StaticResource TextSecondaryBrush}" FontSize="10" FontWeight="Bold"/>
                             </StackPanel>
                         </Grid>
                     </Border>
@@ -179,12 +256,10 @@
 
                                 <TextBox.Resources>
                                     <Style TargetType="{x:Type ScrollBar}" BasedOn="{StaticResource TechScrollBarStyle}"/>
-
                                     <Style TargetType="{x:Type TextBox}">
                                         <EventSetter Event="TextChanged" Handler="LogBox_TextChanged"/>
                                     </Style>
                                 </TextBox.Resources>
-
                             </TextBox>
                         </Grid>
                     </Border>
@@ -213,6 +288,7 @@
                             </EventTrigger>
                         </Border.Triggers>
                     </Border>
+
                 </Grid>
             </Grid>
         </Grid>
