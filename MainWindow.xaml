@@ -134,29 +134,12 @@
                             <TextBlock Text="{Binding ChartTitle}" Foreground="{StaticResource TextSecondaryBrush}" FontSize="10" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="15,10,0,0" Opacity="0.5"/>
 
                             <Button Content="[ SWITCH VIEW ]" 
-                                    Command="{Binding ToggleChartModeCommand}"
-                                    VerticalAlignment="Top" HorizontalAlignment="Right"
-                                    Margin="0,8,10,0"
-                                    Background="Transparent"
-                                    Foreground="{Binding StatusColor}"
-                                    BorderThickness="0"
-                                    FontSize="10"
-                                    Cursor="Hand"
-                                    Opacity="0.8">
-                                <Button.Template>
-                                    <ControlTemplate TargetType="Button">
-                                        <Border Background="Transparent">
-                                            <ContentPresenter/>
-                                        </Border>
-                                        <ControlTemplate.Triggers>
-                                            <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter Property="Opacity" Value="1.0"/>
-                                                <Setter Property="FontWeight" Value="Bold"/>
-                                            </Trigger>
-                                        </ControlTemplate.Triggers>
-                                    </ControlTemplate>
-                                </Button.Template>
-                            </Button>
+        Command="{Binding ToggleChartModeCommand}"
+        Style="{StaticResource SubActionButtonStyle}"
+        VerticalAlignment="Top" HorizontalAlignment="Right"
+        Margin="0,8,10,0"
+        Foreground="{Binding StatusColor}"
+        Opacity="0.8"/>
 
                             <lvc:CartesianChart Series="{Binding Series}" 
                                                 Hoverable="False" 
@@ -232,34 +215,15 @@
                                            VerticalAlignment="Center" Opacity="0.5"/>
 
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                    <StackPanel.Resources>
-                                        <Style TargetType="Button">
-                                            <Setter Property="Background" Value="Transparent"/>
-                                            <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
-                                            <Setter Property="BorderThickness" Value="0"/>
-                                            <Setter Property="FontSize" Value="10"/>
-                                            <Setter Property="Margin" Value="5,0,0,0"/>
-                                            <Setter Property="Cursor" Value="Hand"/>
-                                            <Setter Property="Template">
-                                                <Setter.Value>
-                                                    <ControlTemplate TargetType="Button">
-                                                        <Border Background="{TemplateBinding Background}" CornerRadius="2" Padding="5,2">
-                                                            <ContentPresenter/>
-                                                        </Border>
-                                                        <ControlTemplate.Triggers>
-                                                            <Trigger Property="IsMouseOver" Value="True">
-                                                                <Setter Property="Background" Value="#334155"/>
-                                                                <Setter Property="Foreground" Value="White"/>
-                                                            </Trigger>
-                                                        </ControlTemplate.Triggers>
-                                                    </ControlTemplate>
-                                                </Setter.Value>
-                                            </Setter>
-                                        </Style>
-                                    </StackPanel.Resources>
+                                    <Button Content="[ COPY ]" 
+            Style="{StaticResource SubActionButtonStyle}"
+            Foreground="{Binding StatusColor}" 
+            Command="{Binding CopyLogsCommand}"/>
 
-                                    <Button Content="[ COPY ]" Command="{Binding CopyLogsCommand}"/>
-                                    <Button Content="[ EXPORT .TXT ]" Command="{Binding ExportLogsCommand}"/>
+                                    <Button Content="[ EXPORT .TXT ]" 
+            Style="{StaticResource SubActionButtonStyle}"
+            Foreground="{Binding StatusColor}" 
+            Command="{Binding ExportLogsCommand}"/>
                                 </StackPanel>
                             </Grid>
 
@@ -268,9 +232,8 @@
                                      IsReadOnly="True"
                                      TextWrapping="Wrap"
                                      VerticalScrollBarVisibility="Auto"
-                                     Background="Transparent"
+                                     Style="{StaticResource CyberTextBoxStyle}"
                                      Foreground="{StaticResource TextPrimaryBrush}"
-                                     BorderThickness="0"
                                      FontFamily="{StaticResource TechFont}"
                                      FontSize="12"
                                      Margin="10,0,5,10" 

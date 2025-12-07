@@ -3,8 +3,9 @@
 
     <Color x:Key="DeepSpaceColor">#0f172a</Color>
     <Color x:Key="PanelColor">#1e293b</Color>
+
     <SolidColorBrush x:Key="BackgroundBrush" Color="{StaticResource DeepSpaceColor}"/>
-    <SolidColorBrush x:Key="PanelBrush" Color="{StaticResource PanelColor}" Opacity="0.8"/>
+    <SolidColorBrush x:Key="PanelBrush" Color="{StaticResource PanelColor}" Opacity="0.85"/>
 
     <SolidColorBrush x:Key="TextPrimaryBrush" Color="#f8fafc"/>
     <SolidColorBrush x:Key="TextSecondaryBrush" Color="#94a3b8"/>
@@ -18,6 +19,7 @@
         <Setter Property="Height" Value="50"/>
         <Setter Property="Margin" Value="0,0,0,5"/>
         <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
@@ -27,23 +29,12 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Border x:Name="Indicator" 
-                                Grid.Column="0" 
-                                Background="{TemplateBinding BorderBrush}" 
-                                Opacity="0.3"
-                                CornerRadius="2"/>
+                        <Border x:Name="Indicator" Grid.Column="0" Background="{TemplateBinding BorderBrush}" Opacity="0" CornerRadius="2"/>
 
-                        <Border x:Name="Body" 
-                                Grid.Column="1" 
-                                Background="{TemplateBinding Background}"
-                                CornerRadius="0,4,4,0"
-                                Margin="4,0,0,0">
-                            <ContentPresenter HorizontalAlignment="Left" 
-                                              VerticalAlignment="Center" 
-                                              Margin="15,0,0,0"/>
+                        <Border x:Name="Body" Grid.Column="1" Background="{TemplateBinding Background}" CornerRadius="0,4,4,0" Margin="4,0,0,0">
+                            <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center" Margin="15,0,0,0"/>
                         </Border>
                     </Grid>
-
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter TargetName="Indicator" Property="Opacity" Value="1.0"/>
@@ -55,7 +46,6 @@
                             <Setter TargetName="Body" Property="Background" Value="#2A3749"/>
                             <Setter Property="Foreground" Value="White"/>
                         </Trigger>
-
                         <Trigger Property="IsPressed" Value="True">
                             <Setter TargetName="Body" Property="Background" Value="#334155"/>
                         </Trigger>
@@ -65,14 +55,80 @@
         </Setter>
     </Style>
 
+    <Style x:Key="SubActionButtonStyle" TargetType="Button">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
+        <Setter Property="FontFamily" Value="{StaticResource TechFont}"/>
+        <Setter Property="FontSize" Value="10"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Padding" Value="5,2"/>
+        <Setter Property="Margin" Value="5,0,0,0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}" CornerRadius="3" Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="#334155"/>
+                            <Setter Property="Foreground" Value="White"/>
+                            <Setter Property="FontWeight" Value="Bold"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="Background" Value="#475569"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style x:Key="TechPanelStyle" TargetType="Border">
         <Setter Property="Background" Value="{StaticResource PanelBrush}"/>
-        <Setter Property="BorderBrush" Value="#334155"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="CornerRadius" Value="6"/>
+        <Setter Property="BorderBrush">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#475569" Offset="0.0"/>
+                    <GradientStop Color="#1e293b" Offset="0.6"/>
+                    <GradientStop Color="#00000000" Offset="1.0"/>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
         <Setter Property="Effect">
             <Setter.Value>
-                <DropShadowEffect Color="Black" BlurRadius="10" ShadowDepth="2" Opacity="0.3"/>
+                <DropShadowEffect Color="Black" BlurRadius="10" ShadowDepth="4" Opacity="0.4"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="CyberTextBoxStyle" TargetType="TextBox">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+        <Setter Property="BorderThickness" Value="0,0,0,1"/>
+        <Setter Property="BorderBrush" Value="#334155"/>
+        <Setter Property="FontFamily" Value="{StaticResource TechFont}"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="Padding" Value="5"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Border x:Name="border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" SnapsToDevicePixels="True">
+                        <ScrollViewer x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter TargetName="border" Property="BorderBrush" Value="#64748b"/>
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="true">
+                            <Setter TargetName="border" Property="BorderBrush" Value="{Binding RelativeSource={RelativeSource AncestorType=TextBox}, Path=SelectionBrush}"/>
+                            <Setter TargetName="border" Property="Background" Value="#05FFFFFF"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
@@ -81,10 +137,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Thumb}">
-                    <Border x:Name="thumbBorder" 
-                            Background="#334155" 
-                            CornerRadius="3"
-                            BorderThickness="0"/>
+                    <Border x:Name="thumbBorder" Background="#334155" CornerRadius="3" BorderThickness="0"/>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter TargetName="thumbBorder" Property="Background" Value="#475569"/>
@@ -105,7 +158,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ScrollBar}">
-                    <Grid x:Name="Bg" Background="Transparent" SnapsToDevicePixels="true">
+                    <Grid Background="Transparent" SnapsToDevicePixels="true">
                         <Track x:Name="PART_Track" IsDirectionReversed="true">
                             <Track.Thumb>
                                 <Thumb Style="{StaticResource TechScrollThumb}"/>
